@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderProduct extends Model
 {
+    protected $table = "order_product";
     use SoftDeletes;
     protected $date=['deleted_at'];
     protected $fillable = ['order_id', 'product_id', 'price', 'quantity'];
