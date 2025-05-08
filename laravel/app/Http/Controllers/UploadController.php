@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 class UploadController extends Controller
@@ -34,6 +36,8 @@ class UploadController extends Controller
         $intervention->fit(200, 200, function ($constraint) {
         $constraint->aspectRatio();
         })->save(storage_path('app/public/' . $thumbnailPath));
+
+        Storage::put($thumbnailPath, $intervention);
         
         return $path;
     }
