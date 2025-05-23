@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import axios from 'axios';
 
 export const useTodoStore = defineStore("todo", {
   state: () => ({
@@ -9,49 +10,55 @@ export const useTodoStore = defineStore("todo", {
   },
   actions: {
     async fetchTodos() {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve([
-            {
-              id: 1,
-              name: "Clean house",
-              description: "cleaning house in detail .....",
-              createdAt: "2024-15-07 07:50:00",
-              completedAt: null,
-            },
-            {
-              id: 2,
-              name: "Do homework",
-              description: "Instruction on doing homework ....",
-              createdAt: "2024-05-07 08:00:00",
-              completedAt: "2024-05-07 08:10:00",
-            },
-          ]);
-        }, 1000);
-      }).then((todos) => (this.todos = todos));
-    },
-    toggleStatus(id) {
-      const foundIndex = this.todos.findIndex((t) => t.id == id);
-      if (foundIndex >= 0) {
-        if (this.todos[foundIndex].completedAt != null) {
-          this.todos[foundIndex].completedAt = null;
-        } else {
-          this.todos[foundIndex].completedAt = new Date().toISOString();
-        }
+      try {
+        const response = await axios.get('http://localhost:3100/tasks');
+        this.todos = response.data;
+      } catch (error) {
+        console.error('Failed to fetch todos:', error);
       }
     },
-    addTodo(todo) {
-      this.todos.push({
-        id: this.todos.length + 1,
-        name: todo,
-        description: "description",
-        createdAt: new Date().toISOString(),
-        completedAt: null,
-      });
-      this.todos = JSON.parse(JSON.stringify(this.todos));
+
+    async toggleStatus(name) {
+      const todo = this.todos.find(t => t.name === name);
+      if (!todo) return;
+
+      const newCompletedAt = todo.completedAt ? null : new Date().toISOString();
+
+      try {
+        const encodedName = encodeURIComponent(name);
+        const response = await axios.patch(`http://localhost:3100/tasks/${encodedName}`, {
+          completedAt: newCompletedAt,
+        });
+
+        const updatedTask = response.data;
+        const index = this.todos.findIndex(t => t.name === name);
+        if (index !== -1) {
+          this.todos[index] = updatedTask;
+        }
+      } catch (error) {
+        console.error('Failed to toggle todo status:', error);
+      }
+    },    
+
+    async addTodo(name) {
+      try {
+        const response = await axios.post('http://localhost:3100/tasks', {
+          name,
+          description: 'description',
+        });
+        this.todos.push(response.data);
+      } catch (error) {
+        console.error('Failed to add todo:', error);
+      }
     },
-    clearAll() {
-      this.todos = [];
+
+    async clearAll() {
+      try {
+        axios.delete('http://localhost:3100/tasks');
+        this.todos = [];
+      } catch (error) {
+        console.error('Failed to clear todo:', error);
+      }
     },
   },
 });

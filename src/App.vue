@@ -7,12 +7,10 @@
     <h3>Completed Tasks:</h3>
     <TodoLists status="completed" />
     <div class="pending-tasks">
-      <span
-        >You have <span class="pending-num"> {{ nbOfTodo }} </span> tasks
-        pending.</span
-      >
-      <button class="clear-button">Clear All</button>
-    </div>
+      <span>You have <span class="pending-num"> {{ nbOfTodo }} </span> tasks
+        pending.</span>
+      </div>
+      <button class="clear-button" @click="clearAllTodos()">Clear All</button>
   </div>
 </template>
 <script>
@@ -49,6 +47,15 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 @import "https://unicons.iconscout.com/release/v4.0.0/css/line.css";
+
+.clear-button{
+  margin-top: 30px;
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  transition: all 300ms;
+}
 </style>
