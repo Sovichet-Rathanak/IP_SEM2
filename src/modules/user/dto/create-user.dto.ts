@@ -1,19 +1,15 @@
-import { IsString, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class createUserDto {
-  @IsString({ message: 'ឈ្មោះត្រូវតែជាអក្សរ' })
-  @MinLength(3, { message: 'ឈ្មោះត្រូវតែមានយ៉ាងហោចណាស់ 3 អក្សរ' })
-  @Matches(/^[a-zA-Z0-9]+$/, { message: 'ឈ្មោះត្រូវតែមានតែអក្សរ និងលេខ' })
+  @IsString({ message: 'User name must be of type string' })
+  @MinLength(3, { message: 'User name must have at minimum 3 letters' })
+  @IsNotEmpty({message:'User name cannot be empty'})
   username: string;
 
-  // dara@itc.edu.kh
-  @Matches(/^[\w.-]+@[\w.-]+\.edu\.kh$/, { message: 'អុីម៉ែលមិនត្រឹមត្រូវ' })
+  @IsEmail()
   email: string;
 
-  @IsString({ message: 'លេខសំងាត់ត្រូវតែជាអក្សរ' })
-  @Matches(/^(?=.*[*&+@!$%]).{6,10}$/, {
-    message:
-      'លេខសំងាត់ត្រូវតែមានយ៉ាងហោចណាស់ 6 អក្សរ និងមានអក្សរធំ អក្សរតូច លេខ និងសញ្ញាពិសេស',
-  })
+  @IsNotEmpty({message: "Please enter a password"})
+  @MinLength(3, { message: 'Password should have a minimum length of 8 characters' })
   password: string;
 }
