@@ -1,0 +1,25 @@
+enum Status {P AP L A}
+
+type Attendant {
+  session: String!
+  status: Status!
+  student_id: Int!
+  marker: String!
+}
+
+input MarkAttendanceInput {
+  session: String!
+  status: Status!
+  student_id: Int!
+  marker: String!
+}
+
+type Query {
+  countAttendanceByClassName(class: String!): Int!
+  countAttendanceByStudentId(student_id: Int!): Int!
+}
+
+type Mutation {
+  markAttendance(input: MarkAttendanceInput!): Attendant!
+  removeAttendance(student_id: Int!, session: String!): Boolean!
+}

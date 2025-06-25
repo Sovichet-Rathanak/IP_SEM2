@@ -1,0 +1,31 @@
+type Student{
+    id: Int!
+    name: String!
+    idCard: String!
+    class: String!
+}
+
+input NewStudent{
+    name: String!
+    idCard: String!
+    class: String!
+}
+
+input UpdateStudent{
+    id: Int!
+    name: String
+    idCard: String
+    class: String
+}
+
+type Query{
+    students: [Student!]!
+    student(id: Int!): Student
+}
+
+type Mutation{
+    enrollStudent(input: NewStudent!): Student!
+    removeStudent(id: Int!): Boolean!
+    updateStudent(input: UpdateStudent!): Student!
+    getStudentsByClassName(class: String!): [Student!]!
+}
